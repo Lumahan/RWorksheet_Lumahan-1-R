@@ -170,7 +170,7 @@ if (mathgrades[4,2] > mathgrades[4,3] && mathgrades[4,2] > mathgrades[4,4] && ma
 } else {
   hannascore <- mathgrades[4,5]
 }
-
+# ---
 mathgrades$HighestGrades <- c(anniescore, theascore, stevescore, hannascore)
 
 
