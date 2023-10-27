@@ -96,7 +96,7 @@ mathgrades <- data.frame(
 )
 mathgrades
 
-#8b 
+#8b ----
 
 mathgrades$Average <- (mathgrades$Grade1 + mathgrades$Grade2 + mathgrades$Grade3 + mathgrades$Grade4) / 4
 
