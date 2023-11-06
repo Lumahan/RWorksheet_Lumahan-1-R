@@ -34,6 +34,8 @@ mean_sh
 #1d Is there a relationship between shoe size and height? Why?
 # Yes, because if your shoe is small then your height is small too.
 
+
+
 #2
 Month <- c("March","April","January","November","January",
 "September","October","September","November","August",
