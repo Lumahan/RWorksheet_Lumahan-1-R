@@ -61,9 +61,30 @@ repeat {
 }
 
 
-#4.
+
+#4. 
+
+ShoesData <- read.csv("Shoe sizes")
 
 
+
+#4b.
+maleSub <- subset(ShoesData, Gender == "M")
+femSub <- subset(ShoesData, Gender == "F")
+
+cat("The number of observation in male subset:", nrow(maleSub),"\n")
+cat("The number of observation in female subset:", nrow(femSub),"\n")
+
+
+#4c.
+GenderMF <- table(ShoesData$Gender)
+
+barplot(GenderMF,
+        main = "Number of Male and Female in Household Data",
+        xlab = "Gender",
+        ylab = "Count" ,
+        col = c("red", "green"),
+        legend.text = c("Female", "Male"))
 
 
 #5.
@@ -86,3 +107,9 @@ pie3D(pct,labels=labels, explode=0.05, col=colors, main="Monthly Income Allocati
 
 
 #7.
+
+
+
+
+
+
