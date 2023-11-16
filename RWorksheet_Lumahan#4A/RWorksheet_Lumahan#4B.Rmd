@@ -23,6 +23,7 @@ for (i in 1:5){
 print(matrixA)
 
 
+
 #2.
 vectorA <- 1:5
 matrixA <- matrix(0, nrow=5, ncol=5)
@@ -38,6 +39,7 @@ for (i in 1:nrow(matrixA)) {
 for(k in 1:5) {
   cat("*")
 }
+
 
 
 #3.
@@ -62,9 +64,11 @@ repeat {
 
 
 
+
 #4. 
 
 ShoesData <- read.csv("Shoe sizes")
+
 
 
 
@@ -76,6 +80,8 @@ cat("The number of observation in male subset:", nrow(maleSub),"\n")
 cat("The number of observation in female subset:", nrow(femSub),"\n")
 
 
+
+
 #4c.
 GenderMF <- table(ShoesData$Gender)
 
@@ -85,6 +91,7 @@ barplot(GenderMF,
         ylab = "Count" ,
         col = c("red", "green"),
         legend.text = c("Female", "Male"))
+
 
 
 #5.
@@ -99,7 +106,11 @@ pie3D(pct,labels=labels, explode=0.05, col=colors, main="Monthly Income Allocati
 ![Piechart of Dela Cruz Family's Monthly Income Allocation](https://i.imgur.com/pRKVYyZ.png)
 
 
+
+
 #6.
+
+
 
 
 
