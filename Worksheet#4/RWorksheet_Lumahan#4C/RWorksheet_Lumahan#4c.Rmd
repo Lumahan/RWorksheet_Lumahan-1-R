@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #1.Use the dataset mpg
 mpg <- read.csv("mpg.csv")
 ```
+
 ```{r}
 #B.
 categorical_vars <- c("manufacturer", "model", "trans", "drv", "fl", "class")
@@ -23,6 +24,7 @@ categorical_vars
 continuous_vars <- c("displ", "year", "cyl", "cty", "hwy")
 continuous_vars
 ```
+
 ```{r}
 #2.
 #A.
@@ -36,6 +38,7 @@ manufacturer_models <- mpg %>%
 manufacturer_models[1, ]
 
 ```
+
 ```{r}
 #B.
 library(ggplot2)
@@ -56,6 +59,7 @@ ggplot(manufacturer_models, aes(x = manufacturer, y = num_models)) +
 
 #The plot may be useful for visualizing the distribution of models across manufacturers, but it could be crowded and hard to interpret if there are many models. To make it more informative, you could consider grouping or coloring points based on some other variable, such as the fuel type or class of the car.
 ```
+
 ```{r}
 #3.
 top_20_data <- head(mpg[order(mpg$year, decreasing = TRUE), ], 20)
@@ -73,6 +77,7 @@ cars_per_model <- mpg %>%
 
   print(cars_per_model)
 ```
+
 ```{r}
 #4A.
 top_20_data <- head(mpg[order(mpg$year, decreasing = TRUE), ], 20)
@@ -106,6 +111,7 @@ ggplot(mpg, aes(x = cyl, y = displ, color = displ)) +
 #A.
 #The plot shows that there is a positive relationship between the number of cylinders and engine displacement. As the number of cylinders increases, the engine displacement tends to increase. The color gradient adds an extra dimension, indicating the specific values of engine displacement.
 ```
+
 ```{r}
 #5.
 ggplot(mpg, aes(x = displ, y = hwy, color = cyl)) +
@@ -115,10 +121,12 @@ ggplot(mpg, aes(x = displ, y = hwy, color = cyl)) +
   scale_color_gradient(low = "blue", high = "red") +
   theme_minimal()
 ```
+
 ```{r}
 #6.
 traffic <- read.csv("traffic.csv")
 ```
+
 ```{r}
 #A.
 num_observations <- nrow(traffic)
@@ -131,17 +139,21 @@ cat("Variables of the traffic dataset:", variables, "\n")
 
 ```{r}
 #B.
-junctions <- subset(traffic, Type == "Junction")
-print(junctions)
+junctions <- unique(traffic$junction_name)
+junctions
 ```
 
 ```{r}
+#C.
 library(ggplot2)
 
-ggplot(junctions, aes(x = Time, y = Count, group = Junction, color = Junction)) +
- geom_line() +
- labs(title = "Junctions Traffic", x = "Time", y = "Count") +
- theme_minimal()
+for (j in junctions) {
+ subset_traffic <- traffic[traffic$junction_name == j, ]
+ ggplot(subset_traffic, aes(x = timestamp, y = congestion_value, group = ID)) +
+    geom_line() +
+    labs(title = paste("Congestion over time for junction", j)) +
+    theme_minimal()
+}
 ```
 
 ```{r}
@@ -149,42 +161,77 @@ ggplot(junctions, aes(x = Time, y = Count, group = Junction, color = Junction)) 
 #A.
 library(openxlsx)
 
-alexa_file <- read.xlsx("alexa_file.xlsx")
+alexafile <- read.xlsx("alexa_file.xlsx")
 
-print(dim(alexa_file))
+alexa_obser <- nrow(alexafile)
+
+alexacol_obser <- ncol(alexafile)
+
+cat("The number of observations on alexa is:",alexa_obser,"\n")
+cat("The number of coloumns on alexa is:",alexacol_obser,"\n")
 ```
+
 ```{r}
 #B.
 library(dplyr)
+groupvari <- alexafile%>%
+  group_by(variation)%>%
+  summarise(totalcount_ = n())
+ 
 
-alexa_file %>%
- group_by(Variation) %>%
- summarise(Total = sum(NumberOfVerifiedReviews))
+groupvari
 ```
 
 ```{r}
 #C.
-ggplot(alexa_file, aes(x = Date, y = NumberOfVerifiedReviews, group = Variation, color = Variation)) +
- geom_line() +
- labs(title = "Variations", x = "Date", y = "NumberOfVerifiedReviews") +
- theme_minimal()
+library(ggplot2)
+
+ggplot(alexafile, aes(x = variation)) +
+  geom_bar() +
+  labs(title = "Distribution of Variations",
+       x = "Variation",
+       y = "Count") +
+  theme_minimal()
 ```
+
 ```{r}
 #D.
-ggplot(alexa_file, aes(x = Date, y = NumberOfVerifiedReviews, group = 1)) +
- geom_line() +
- labs(title = "Verified Reviews", x = "Date", y = "NumberOfVerifiedReviews") +
- theme_minimal()
+alexafile$date <- as.Date(alexafile$date)
+
+alexafile$month <- format(alexafile$date, "%m")
+
+monthscount <- alexafile %>%
+  group_by(month) %>%
+  summarise(num_reviews = n())
+
+
+monthlyrev <- table(monthscount)
+
+ggplot(monthscount, aes(x = month, y = num_reviews, group = 1)) +
+  geom_line(color = "blue") +
+  labs(title = "Number of Verified Reviews Per Month",
+       x = "Month of 2017", y = "Number of Reviews")
 ```
+
 ```{r}
 #E.
-alexa_file %>%
- group_by(Variation) %>%
- summarise(AvgRating = mean(Rating)) %>%
- arrange(desc(AvgRating))
+library(dplyr)
+ggplot(alexafile, aes(x = variation, y = rating, fill = variation)) +
+  geom_bar(stat = "summary", fun = "mean", position = "dodge") +
+  scale_fill_manual(values = rainbow(n = length(unique(alexafile$variation)))) +  
+  labs(title = "Relationship Between Variations and Ratings",
+       x = "Variations",
+       y = "Average Rating") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-ggplot(alexa_file, aes(x = Rating, y = NumberOfVerifiedReviews, group = Variation, color = Variation)) +
- geom_line() +
- labs(title = "Variations and Ratings", x = "Rating", y = "NumberOfVerifiedReviews") +
- theme_minimal()
+var_ratings <-  alexafile %>%
+  group_by(variation)%>%
+  summarise(avearage_rating = mean(rating, na.rm = TRUE))
+
+max_rating <- max(var_ratings$average_rating, na.rm = TRUE)
+
+highrate <- alexafile %>%
+  filter(rating == max_rating)
+print(highrate)
 ```
