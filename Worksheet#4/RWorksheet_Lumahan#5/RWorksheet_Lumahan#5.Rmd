@@ -1,0 +1,156 @@
+---
+title: "RWorksheet_Lumahan#5"
+output:
+  pdf_document: default
+  html_document: default
+date: "2023-12-22"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. Create a data frame for the table below. Show your solution.
+```{r}
+
+studentScores <- data.frame(
+  Student = c(1:10),
+  PreTest = c(55, 54, 47, 57, 51, 61, 57, 54, 63, 58),
+  PostTest = c(61, 60, 56, 63, 56, 63, 59, 56, 62, 61)
+)
+
+studentScores
+
+names(studentScores) <- c("Student", "PreTest", "PostTest")
+
+
+```
+1a.
+```{r}
+
+install.packages("Hmisc")
+install.packages("pastecs")
+
+library(Hmisc)
+library(pastecs)
+
+# Hmisc
+describe(studentScores)
+
+# pastecs
+stat.desc(studentScores)
+
+
+```
+
+2. 
+The Department of Agriculture was studying the effects of several levels of a fertilizer
+on the growth of a plant. For some analyses, it might be useful to convert the fertilizer
+levels to an ordered factor.
+
+The data are 10,10,10, 20,20,50,10,20,10,50,20,50,20,10.
+```{r}
+fertilizerLevels <- c(10, 10, 10, 20, 20, 50, 10, 20, 10, 50, 20, 50, 20, 10)
+
+orderedLevels <- ordered(fertilizerLevels, levels = c(10, 20, 50))
+
+orderedLevels
+
+# The numbers inside the square brackets represent the observations or data points and below it are the levels. The arrow is the one that indicates the order from 10 less than to 20 and 20 less than to 50.
+```
+
+3. 
+Abdul Hassan, president of Floor Coverings Unlimited, has asked you to study the ex-
+ercise levels undertaken by 10 subjects were “l”, “n”, “n”, “i”, “l” , “l”, “n”,
+
+“n”, “i”, “l” ; n=none, l=light, i=intense
+a. What is the best way to represent this in R?
+```{r}
+exerciseLevels <- c("l", "n", "n", "i", "l", "l", "n", "n", "i", "l")
+
+factorExercise <- factor(exerciseLevels, levels = c("n", "l", "i"))
+
+factorExercise
+
+#4. Sample of 30 tax accountants from all the states and territories of Australia and their individual state of origin is specified by a character vector of state mnemonics as:
+
+states <- c("tas", "sa", "qld", "nsw", "nsw", "nt", "wa", "wa", "qld",
+  "vic", "nsw", "vic", "qld", "qld", "sa", "tas", "sa", "nt",
+  "wa", "vic", "qld", "nsw", "nsw", "wa", "sa", "act", "nsw",
+  "vic", "vic", "act")
+
+factorState <- factor(states, levels = c("act", "nsw", "nt", "qld", "sa", "tas", "vic", "wa"))
+
+factorState
+
+#the number inside the square brackets are the observations and below it are the levels. the levels represent the specified geographic regions of Australia.
+
+```
+
+5. From #4 - continuation:
+```{r}
+incomes <- c(60, 49, 40, 61, 64, 60, 59, 54, 62, 69, 70, 42, 56, 61, 61, 61, 58, 51, 48, 65, 49, 49, 41, 48, 52, 46, 59, 46, 58, 43)
+
+incMeans <- tapply(incomes, factorState, mean)
+incMeans
+
+
+#b.
+
+# we see that it calculates the means of every states.
+```
+
+6. Calculate the standard errors of the state income means (refer again to number 5)
+
+```{r}
+stdError <- function(x) sqrt(var(x) / length(x))
+incStdErr <- tapply(incomes, factorState, stdError)
+incStdErr
+
+#b.
+# in no.5 we see the means of every states while here, we calculate the standard error of each states.
+
+# the standard errors provide a measure of the uncertainty associated with the sample mean incomes for each state. Lower standard errors indicate more precise estimates, while higher standard errors suggest greater variability in the estimates.
+```
+
+7.
+```{r}
+
+install.packages("titanic")
+library(titanic)
+
+data("titanic_train")
+
+survived <- subset(titanic_train, Survived == 1)
+notSurvived <- subset(titanic_train, Survived == 0)
+
+head(survived)
+head(notSurvived)
+
+```
+
+
+
+9. Export the data abalone to the Microsoft excel file. Copy the codes.
+```{r, error=TRUE}
+
+install.packages("AppliedPredictiveModeling")
+library(AppliedPredictiveModeling)
+
+data("abalone")
+
+install.packages("openxlsx")
+library(openxlsx)
+
+write.xlsx(abalone, file = "abalone.xlsx")
+
+View(abalone)
+head(abalone)
+summary(abalone)
+
+```
+
+```{r}
+
+
+```
